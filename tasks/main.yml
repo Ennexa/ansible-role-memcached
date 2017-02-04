@@ -8,6 +8,11 @@
     memcached_user: "{{ __memcached_user }}"
   when: memcached_user is not defined
 
+- name: Install Memcached.
+  yum: name=memcached state=installed enablerepo=remi
+  register: memcached_install
+  when: ansible_os_family == 'RedHat'
+  
 # Setup/install tasks.
 - name: Update apt cache.
   apt: update_cache=yes cache_valid_time=86400
@@ -16,6 +21,7 @@
 - name: Install Memcached.
   package: name=memcached state=present
   register: memcached_install
+  when: ansible_os_family == 'Debian'
 
 # Configure Memcached.
 - name: Copy Memcached configuration.
